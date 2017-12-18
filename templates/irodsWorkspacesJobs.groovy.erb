@@ -40,6 +40,12 @@ def handlerStep = { project ->
         exit
     fi
 
+    # remove obsolete ojdbc5.jar if it exists
+    if [[ -e \$GUS_HOME/lib/java/db_driver/ojdbc5.jar ]]
+      then
+        rm \$GUS_HOME/lib/java/db_driver/ojdbc5.jar
+    fi
+
 
     fgpJava org.apidb.irods.BuildEventsFile
   """.stripIndent()
@@ -105,12 +111,6 @@ esac
 
 mkdir -p "\$GUS_HOME/lib/java/db_driver";
 cp "\$ORACLE_HOME/jdbc/lib/ojdbc6.jar" "\$GUS_HOME/lib/java/db_driver/"
-
-# remove obsolete ojdbc5.jar if it exists
-if [[ -e \$GUS_HOME/lib/java/db_driver/ojdbc5.jar ]]
-  then
-    rm \$GUS_HOME/lib/java/db_driver/ojdbc5.jar
-fi
 
 #create empty site-vars.yml - all conifer config should be in env config
 mkdir -p \$GUS_HOME/config
