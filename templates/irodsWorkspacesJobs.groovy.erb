@@ -22,6 +22,10 @@ def handlerStep = { project ->
     echo PROJECT_DB=\$PROJECT_DB
     echo PROJECT_LOC=\$PROJECT_LOC
 
+    # see if this project is configured correctly or at all, bail if it isn't
+    test "\$PROJECT_DB" == "" && exit
+    test "\$PROJECT_LOC" == "" && exit
+
     # if project location is not both, and we aren't local, 
     # just bail without configuring that project.
     if [[ "\$PROJECT_LOC" == "north" && "\$label" == "irods-south" ]]
@@ -85,6 +89,7 @@ export PERL5LIB="\$GUS_HOME/lib/perl"
 export SITE_VARS="\$GUS_HOME/config/site-vars.yml"
 
 export PROJECT_LIST="\$PROJECT_HOME/EuPathDBIrods/projectconf/${config.confset}"
+export CONFIGURED_PROJECTS=0
 
 case "\$ENV" in
     savm)
@@ -180,10 +185,16 @@ fi
   EuPathDBIrods \\
   \$EXTRA_CONIFER_ARGS
 
+  CONFIGURED_PROJECTS=\$[\$CONFIGURED_PROJECTS+1]
+
 done
 
-# Contains all the project dependencies
-bld EuPathDBIrods
+# only build if we have configured at least one project
+if [ "\$CONFIGURED_PROJECTS" -gt 0 ]
+then
+  # Contains all the project dependencies
+  bld EuPathDBIrods
+fi
 
   """.stripIndent()
 }
