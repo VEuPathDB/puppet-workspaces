@@ -40,11 +40,8 @@ def handlerStep = { project ->
         exit
     fi
 
-    # remove obsolete ojdbc5.jar if it exists
-    if [[ -e \$GUS_HOME/lib/java/db_driver/ojdbc5.jar ]]
-      then
-        rm \$GUS_HOME/lib/java/db_driver/ojdbc5.jar
-    fi
+    # remove obsolete ojdbc5.jar
+    rm \$GUS_HOME/lib/java/db_driver/ojdbc5.jar || true
 
 
     fgpJava org.apidb.irods.BuildEventsFile
