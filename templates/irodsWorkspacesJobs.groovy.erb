@@ -189,8 +189,13 @@ done
 # only build if we have configured at least one project
 if [ "\$CONFIGURED_PROJECTS" -gt 0 ]
 then
-  # Contains all the project dependencies
-  bld EuPathDBIrods
+  if [[ "\$DO_BUILD" == "true" ]]
+  then
+    # Contains all the project dependencies
+    bld EuPathDBIrods
+  else
+    echo "skipping build"
+  fi
 fi
 
   """.stripIndent()
@@ -208,6 +213,7 @@ matrixJob('irods-builder') {
   parameters {
     stringParam('MODE', 'Dev', 'Indicates whether the mode of operation is development (DEV) or other.  If not development, a complete cleaning is done.')
     stringParam('ENV', config.environment, 'The environment to run in, (savm, prod, qa)')
+    booleanParam('DO_BUILD', true, 'If true, perform build.  If false, config only')
   }
   scm {
     svn {
