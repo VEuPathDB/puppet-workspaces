@@ -206,7 +206,10 @@ matrixJob('irods-builder') {
     label('label', *config.labelNodes)
   }
   description('')
-  blockOn('^' + config.handlerJobPrefix + '.*')
+  blockOn('^' + config.handlerJobPrefix + '.*'){
+    blockLevel('GLOBAL')
+  }
+
   customWorkspace(config.workspace)
   //childCustomWorkspace('.')
   concurrentBuild(true)
@@ -343,7 +346,9 @@ for(project in config.projects) {
         parameters {
       	  stringParam(config.datasetStoreId, '', 'This is essentially the signature of the dataset store calling this handler\'s listener.')
         }
-        blockOn(config.builderJob)
+        blockOn(config.builderJob){
+          blockLevel('GLOBAL')
+        }
         //label(node)
         customWorkspace(config.workspace)
         //childCustomWorkspace('.')
