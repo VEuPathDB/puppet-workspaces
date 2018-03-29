@@ -40,6 +40,13 @@
 # users to configure statically, if not using ldap.  It is an array of
 # user,pass.  defaults to an empty list, which will configure no users
 #
+# * `notification_email`
+# notification email address jenkins uses for errors & failures
+#
+# * `notification_sender_email`
+# this sets the sender address of the notification email.  Should be different
+# than the notification email.
+#
 # * `plugins`
 # a list of jenkins plugins to install
 #
@@ -76,6 +83,8 @@ class workspaces::jenkins (
   $confset             = $::workspaces::jenkins::params::confset,
   $instance_home       = $::workspaces::jenkins::params::instance_home,
   $static_users        = $::workspaces::jenkins::params::static_users,
+  $notification_email  = $::workspaces::jenkins::params::notification_email,
+  $notification_sender_email  = $::workspaces::jenkins::params::notification_sender_email,
   $plugins             = $::workspaces::jenkins::params::plugins,
 
   $use_ldap             = $::workspaces::jenkins::params::use_ldap,

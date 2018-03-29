@@ -11,6 +11,8 @@ class workspaces::jenkins::params {
   $confset            = "wij_configuration_set"
   $instance_home      = "/usr/local/home/jenkins/Instances/WS"
   $static_users       = []
+  $notification_email = undef
+  $notification_sender_email = undef
 
   #ldap options should be specified in hiera
   $use_ldap             = false
