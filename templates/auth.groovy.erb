@@ -90,6 +90,7 @@ Thread.start {
     Set<Permission> authenticatedPermissions = new HashSet<Permission>();
     authenticatedPermissions.add(Permission.fromId("hudson.model.Hudson.Read"));
     authenticatedPermissions.add(Permission.fromId("hudson.model.View.Read"));
+    authenticatedPermissions.add(Permission.fromId("hudson.model.Item.Read"));
 
     Role authenticatedRole = new Role(globalRoleRead, authenticatedPermissions);
     roleBasedAuthenticationStrategy.addRole(RoleBasedAuthorizationStrategy.GLOBAL, authenticatedRole);
