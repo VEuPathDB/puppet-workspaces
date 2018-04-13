@@ -317,9 +317,6 @@ job('irods-listener') {
   steps {
     systemGroovyCommand(listenerStep())
   }
-  triggers {
-    cron('H/5 * * * *')
-  }
   publishers {
 	extendedEmail {
 	  recipientList(config.emailRecipient)
