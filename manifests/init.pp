@@ -84,13 +84,19 @@ class workspaces (
   # to be passed as an argement into the jenkins job
 
   if ( $cron_enable ) {
-
-    cron { 'trigger jenkins listener':
-      command => "/var/lib/irods/msiExecCmd_bin/executeJobFile.py \$(/usr/bin/imeta ls -C /ebrc/workspaces irods_id | /usr/bin/awk '/value/{print \$2}')",
-      user    => 'irods',
-      minute  => '*/5',
-    }
+    $cron_ensure = 'present'
   }
+  else {
+    $cron_ensure = 'absent'
+  }
+
+  cron { 'trigger jenkins listener':
+    ensure  => $cron_ensure,
+    command => "$msi_bin/executeJobFile.py \$(/usr/bin/imeta ls -C /ebrc/workspaces irods_id | /usr/bin/awk '/value/{print \$2}')",
+    user    => 'irods',
+    minute  => '*/5',
+  }
+
 }
 
 
