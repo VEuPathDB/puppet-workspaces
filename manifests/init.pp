@@ -46,10 +46,6 @@ class workspaces (
 
   # TODO put in packages.pp?
   # these packages are needed for irods helper scripts
-  package { 'python-irodsclient':
-    ensure   => installed,
-    provider => 'pip',
-  }
   package { 'python-jenkins':
     ensure => installed,
   }
