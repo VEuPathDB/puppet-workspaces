@@ -26,6 +26,10 @@
 #
 # The revision to be checked out, defaults to HEAD
 #
+# * `cron_enable`
+#
+# Boolean that controls if the cron job to trigger the jenkins listener is
+# enabled.
 
 class workspaces (
 
@@ -35,6 +39,8 @@ class workspaces (
 
   $checkout_location = $::workspaces::params::checkout_location,
   $checkout_revision = $::workspaces::params::checkout_revision,
+
+  $cron_enable = $::workspaces::params::cron_enable,
   
 ) inherits workspaces::params {
 
@@ -73,6 +79,18 @@ class workspaces (
 
   create_resources(file, $links, $link_defaults)
 
+  # create cron job to trigger listener runs
+  # This is here and not in jenkins because it requires the irods_id metadata
+  # to be passed as an argement into the jenkins job
+
+  if ( $cron_enable ) {
+
+    cron { 'trigger jenkins listener':
+      command => "/var/lib/irods/msiExecCmd_bin/executeJobFile.py \$(/usr/bin/imeta ls -C /ebrc/workspaces irods_id | /usr/bin/awk '/value/{print \$2}')",
+      user    => 'irods',
+      minute  => '*/5',
+    }
+  }
 }
 
 
