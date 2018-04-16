@@ -38,6 +38,7 @@ class workspaces::jenkins::params {
     'github',
     'gradle',
     'groovy',
+    'groovy-postbuild',
     'job-dsl',
     'junit',
     'mailer',

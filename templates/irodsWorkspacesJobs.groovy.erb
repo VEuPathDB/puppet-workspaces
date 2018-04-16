@@ -357,6 +357,21 @@ for(project in config.projects) {
           shell(handlerStep(project))
         }
 	publishers {
+
+// Note: would be nice to use the dsl below, but there is no runForMatrixParent
+// option in dsl currently, so we just do it manually with a configure block.
+//          groovyPostBuild('if (manager.build.result.isWorseThan(hudson.model.Result.SUCCESS)) { manager.build.project.disabled = true }', Behavior.DoNothing)
+
+          configure { it / 'publishers' / 'org.jvnet.hudson.plugins.groovypostbuild.GroovyPostbuildRecorder' {
+              runForMatrixParent true
+              behavior 0
+              script {
+                script 'if (manager.build.result.isWorseThan(hudson.model.Result.SUCCESS)) { manager.build.project.disabled = true }'
+                sandbox false
+              }
+            }
+          }
+
 	  extendedEmail {
 	    recipientList(config.emailRecipient)
 	    defaultSubject('Jenkins Message for the ' + project + ' iRODS handler')
