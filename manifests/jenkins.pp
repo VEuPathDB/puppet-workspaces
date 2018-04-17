@@ -40,6 +40,9 @@
 # users to configure statically, if not using ldap.  It is an array of
 # user,pass.  defaults to an empty list, which will configure no users
 #
+# * `svn_build_poll`
+# configures whether or not to do builds based on svn polling
+#
 # * `notification_email`
 # notification email address jenkins uses for errors & failures
 #
@@ -83,6 +86,7 @@ class workspaces::jenkins (
   $confset             = $::workspaces::jenkins::params::confset,
   $instance_home       = $::workspaces::jenkins::params::instance_home,
   $static_users        = $::workspaces::jenkins::params::static_users,
+  $svn_build_poll      = $::workspaces::jenkins::params::svn_build_poll,
   $notification_email  = $::workspaces::jenkins::params::notification_email,
   $notification_sender_email  = $::workspaces::jenkins::params::notification_sender_email,
   $plugins             = $::workspaces::jenkins::params::plugins,

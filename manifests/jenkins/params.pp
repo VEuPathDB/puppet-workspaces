@@ -11,6 +11,7 @@ class workspaces::jenkins::params {
   $confset            = "wij_configuration_set"
   $instance_home      = "/usr/local/home/jenkins/Instances/WS"
   $static_users       = []
+  $svn_build_poll     = true
   $notification_email = undef
   $notification_sender_email = undef
 

@@ -276,8 +276,10 @@ matrixJob('irods-builder') {
       }
     }
   }
-  triggers {
-    scm('H H * * *')
+  if (config.svn_build_poll) {
+    triggers {
+      scm('H H * * *')
+    }
   }
   wrappers {
     preScmSteps {
