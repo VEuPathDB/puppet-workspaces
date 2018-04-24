@@ -39,6 +39,7 @@ class workspaces (
 
   $checkout_location = $::workspaces::params::checkout_location,
   $checkout_revision = $::workspaces::params::checkout_revision,
+  $branch            = $::workspaces::params::branch,
 
   $cron_enable = $::workspaces::params::cron_enable,
   
@@ -60,8 +61,7 @@ class workspaces (
   vcsrepo { $checkout_location:
     ensure        => present,
     provider      => svn,
-    source        => 'https://cbilsvn.pmacs.upenn.edu/svn/apidb/EuPathDBIrods/trunk',
-    revision      => $checkout_revision,
+    source        => "https://cbilsvn.pmacs.upenn.edu/svn/apidb/EuPathDBIrods/${branch}",
   }
 
   # create links to individual files in svn checkout

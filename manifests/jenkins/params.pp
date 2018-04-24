@@ -12,6 +12,7 @@ class workspaces::jenkins::params {
   $instance_home      = "/usr/local/home/jenkins/Instances/WS"
   $static_users       = []
   $svn_build_poll     = true
+  $branch             = "trunk"
   $notification_email = undef
   $notification_sender_email = undef
 

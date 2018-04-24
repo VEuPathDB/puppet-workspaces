@@ -11,6 +11,7 @@ class workspaces::params {
 
   $checkout_location = "/vagrant/scratch/svn_files"
   $checkout_revision = "HEAD"
+  $branch            = "trunk"
 
   $cron_enable = true
 

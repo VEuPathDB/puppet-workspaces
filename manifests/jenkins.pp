@@ -43,6 +43,9 @@
 # * `svn_build_poll`
 # configures whether or not to do builds based on svn polling
 #
+# * `branch`
+# what branch to pull svn updates from.  Defaults to 'trunk'
+#
 # * `notification_email`
 # notification email address jenkins uses for errors & failures
 #
@@ -87,6 +90,7 @@ class workspaces::jenkins (
   $instance_home       = $::workspaces::jenkins::params::instance_home,
   $static_users        = $::workspaces::jenkins::params::static_users,
   $svn_build_poll      = $::workspaces::jenkins::params::svn_build_poll,
+  $branch              = $::workspaces::jenkins::params::branch,
   $notification_email  = $::workspaces::jenkins::params::notification_email,
   $notification_sender_email  = $::workspaces::jenkins::params::notification_sender_email,
   $plugins             = $::workspaces::jenkins::params::plugins,
