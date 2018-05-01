@@ -30,6 +30,11 @@
 #
 # Boolean that controls if the cron job to trigger the jenkins listener is
 # enabled.
+#
+# * `collectd_enable`
+#
+# Boolean that controls if collectd config is included
+#
 
 class workspaces (
 
@@ -41,7 +46,8 @@ class workspaces (
   $checkout_revision = $::workspaces::params::checkout_revision,
   $branch            = $::workspaces::params::branch,
 
-  $cron_enable = $::workspaces::params::cron_enable,
+  $cron_enable     = $::workspaces::params::cron_enable,
+  $collectd_enable = $::workspaces::params::collectd_enable,
   
 ) inherits workspaces::params {
 
@@ -91,6 +97,25 @@ class workspaces (
     command => "$msi_bin/executeJobFile.py \$(/usr/bin/imeta ls -C /ebrc/workspaces irods_id | /usr/bin/awk '/value/{print \$2}')",
     user    => 'irods',
     minute  => '*/5',
+  }
+
+  # collectd config - requires collectd to be configured
+  if ( $collectd_enable ) {
+    file { '/var/lib/irods/collectd_queries':
+      ensure => 'file',
+      source => 'puppet:///modules/workspaces/collectd_queries',
+      mode   => '0750'
+      owner  => 'irods',
+      group  => 'irods',
+    }
+
+    collectd::plugin::exec::cmd {
+      'workspaces':
+        user => irods,
+        group => irods,
+        exec => ["/var/lib/irods/collectd_queries"],
+    }
+
   }
 
 }

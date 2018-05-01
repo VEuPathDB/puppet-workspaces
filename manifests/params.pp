@@ -14,5 +14,6 @@ class workspaces::params {
   $branch            = "trunk"
 
   $cron_enable = true
+  $collectd_enable = false
 
 }
