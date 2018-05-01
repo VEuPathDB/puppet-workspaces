@@ -6,9 +6,13 @@ INTERVAL="${COLLECTD_INTERVAL:-60}"
 
 while sleep "$INTERVAL"; do
     # total number of users
-    iquest "PUTVAL \"$HOSTNAME/workspaces/gauge-users\" interval=$INTERVAL N:%s" "select count(DATA_NAME) where COLL_NAME like '/ebrc/workspaces/users'"
+    users=$(ils /ebrc/workspaces/users | grep -c '  C- ')
+    echo "PUTVAL \"$HOSTNAME/workspaces/gauge-users\" interval=$INTERVAL N:$users"
     # total number of events
-    iquest "PUTVAL \"$HOSTNAME/workspaces/gauge-events\" interval=$INTERVAL N:%s" "select count(DATA_NAME) where COLL_NAME like '/ebrc/workspaces/events'"
+    events=$(iquest "select DATA_NAME where COLL_NAME like '/ebrc/workspaces/events'"|grep -c ^DATA_NAME)
+    echo "PUTVAL \"$HOSTNAME/workspaces/gauge-events\" interval=$INTERVAL N:$events"
     # total number of datasets
-    iquest "PUTVAL \"$HOSTNAME/workspaces/gauge-datasets\" interval=$INTERVAL N:%s" "select COUNT(COLL_NAME) where COLL_NAME like '/ebrc/workspaces/users/%/datasets/%' and COLL_NAME not like '%datafiles'"
+    datasets=$(iquest "select COLL_NAME where COLL_NAME like '/ebrc/workspaces/users/%/datasets/%' and COLL_NAME not like '%datafiles'"| grep -c ^COLL_NAME)
+    echo "PUTVAL \"$HOSTNAME/workspaces/gauge-datasets\" interval=$INTERVAL N:$datasets"
+
 done
