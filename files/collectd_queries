@@ -1,0 +1,14 @@
+#!/bin/bash
+
+export HOME="/var/lib/irods"
+HOSTNAME="${COLLECTD_HOSTNAME:-localhost}"
+INTERVAL="${COLLECTD_INTERVAL:-60}"
+
+while sleep "$INTERVAL"; do
+    # total number of users
+    iquest "PUTVAL \"$HOSTNAME/workspaces/counter-users\" interval=$INTERVAL N:%s" "select count(DATA_NAME) where COLL_NAME like '/ebrc/workspaces/users'"
+    # total number of events
+    iquest "PUTVAL \"$HOSTNAME/workspaces/counter-events\" interval=$INTERVAL N:%s" "select count(DATA_NAME) where COLL_NAME like '/ebrc/workspaces/events'"
+    # total number of datasets
+    iquest "PUTVAL \"$HOSTNAME/workspaces/counter-datasets\" interval=$INTERVAL N:%s" "select COUNT(COLL_NAME) where COLL_NAME like '/ebrc/workspaces/users/%/datasets/%' and COLL_NAME not like '%datafiles'"
+done

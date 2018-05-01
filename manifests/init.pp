@@ -104,7 +104,7 @@ class workspaces (
     file { '/var/lib/irods/collectd_queries':
       ensure => 'file',
       source => 'puppet:///modules/workspaces/collectd_queries',
-      mode   => '0750'
+      mode   => '0750',
       owner  => 'irods',
       group  => 'irods',
     }
