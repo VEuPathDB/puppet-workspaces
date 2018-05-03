@@ -1,8 +1,9 @@
 import hudson.model.*
 import jenkins.security.*
 
+def config = new ConfigSlurper().parse(new File('<%= @dslconfig -%>').toURL())
 
-User u = User.get("wrkspuser")  
+User u = User.get(config.wrkspuser)
 ApiTokenProperty t = u.getProperty(ApiTokenProperty.class)  
 def token = t.getApiToken()
 //token.getClass()
