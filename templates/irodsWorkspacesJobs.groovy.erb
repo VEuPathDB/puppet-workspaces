@@ -381,22 +381,6 @@ for(project in config.projects) {
               }
             }
           }
-
-	  extendedEmail {
-	    recipientList(config.emailRecipient)
-	    defaultSubject('Jenkins Message for the ' + project + ' iRODS handler')
-		defaultContent('EOM')
-		replyToList(config.sender)
-	    triggers {
-	      failure {
-	        subject('Jenkins Failure for the ' + project + ' iRODS handler')
-	        content('Handler failed')
-			attachBuildLog(true)
-			replyToList(config.sender)
-			recipientList(config.emailRecipient)
-	      }
-	    }
-	  }
 	}
     }
 }
