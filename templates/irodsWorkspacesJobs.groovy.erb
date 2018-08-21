@@ -371,9 +371,9 @@ export GUS_CONFIG=\$GUS_HOME/config/\$PROJECT/gus.config
     # we run truncate core tables first, then dataset type tables
 
     awk -F= '/databasePassword/{print \$2}' \$GUS_CONFIG \
-    | sqlplus  \$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetCoreTables.sql
-    awk -F= '/databasePassword/{print \$2}' \$GUS_CONFIG \
     | sqlplus  \$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetTypeTables.sql
+    awk -F= '/databasePassword/{print \$2}' \$GUS_CONFIG \
+    | sqlplus  \$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetCoreTables.sql
   fi
 
   """.stripIndent()
