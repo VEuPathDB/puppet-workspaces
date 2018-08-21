@@ -1,0 +1,38 @@
+def config = new ConfigSlurper().parse(new File('<%= @dslconfig -%>').toURL())
+
+import jenkins.model.Jenkins
+import hudson.model.ListView
+
+// get Jenkins instance
+Jenkins jenkins = Jenkins.getInstance()
+
+// variables
+def cleanerViewName = 'cleaners'
+def handlerViewName = 'handlers'
+
+// get the view / returns null if view isn't created yet
+cleanerView = hudson.model.Hudson.instance.getView(cleanerViewName)
+handlerView = hudson.model.Hudson.instance.getView(handlerViewName)
+
+
+// create the new views if they haven't been yet
+if (!cleanerView) { 
+ jenkins.addView(new ListView(cleanerViewName))
+ cleanerView = hudson.model.Hudson.instance.getView(cleanerViewName)
+}
+if (!handlerView) {
+ jenkins.addView(new ListView(handlerViewName))
+ handlerView = hudson.model.Hudson.instance.getView(handlerViewName)
+}
+
+// add jobs
+for(project in config.projects) {
+ cleanerView.doAddJobToView(config.cleanerJobPrefix + project)
+ handlerView.doAddJobToView(config.handlerJobPrefix + project)
+}
+
+// add listener to handler view
+handlerView.doAddJobToView(config.listenerJob)
+
+// save current Jenkins state to disk
+jenkins.save()

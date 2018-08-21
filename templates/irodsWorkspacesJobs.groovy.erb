@@ -346,6 +346,63 @@ job('irods-listener') {
   }
 }
 
+def cleanerStep = { project ->
+  return """
+
+export BASE_GUS="\$WORKSPACE"
+export GUS_HOME="\$BASE_GUS/gus_home"
+export PROJECT_HOME="\$BASE_GUS/project_home"
+export PATH="\$GUS_HOME/bin:\$PROJECT_HOME/install/bin:\$PATH"
+export PROJECT_ID="${project}"
+export PROJECT=\$PROJECT_ID
+export PROJECT_LIST="\$PROJECT_HOME/EuPathDBIrods/projectconf/${config.confset}"
+export PROJECT_DB="\$(grep \$PROJECT \$PROJECT_LIST | cut -f 2)"
+
+
+export GUS_CONFIG=\$GUS_HOME/config/\$PROJECT/gus.config
+
+  if [[ "\$DRY_RUN" == "true" ]]
+  then
+    echo "I would take info out of \$GUS_CONFIG and run \$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncate* against \$PROJECT_DB"
+    ls -al \$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncate*
+  else
+    # we pull out the password this way so that we don't expose it to process listing.  
+    # Database password is pulled out the same way in a subshell
+    # we run truncate core tables first, then dataset type tables
+
+    awk -F= '/databasePassword/{print \$2}' \$GUS_CONFIG \
+    | sqlplus  \$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetCoreTables.sql
+    awk -F= '/databasePassword/{print \$2}' \$GUS_CONFIG \
+    | sqlplus  \$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetTypeTables.sql
+  fi
+
+  """.stripIndent()
+}
+
+for(project in config.projects) {
+    jobName = 'cleaner-' + project
+    matrixJob(jobName) {
+        axes {
+            label('label', *config.labelNodes)
+        }
+        description('cleaner job for ' + project)
+        parameters {
+          booleanParam('DRY_RUN', true, 'If true, just print what we would do, don\'t do anything ')
+        }
+        blockOn('^' + config.handlerJobPrefix + project){
+          blockLevel('GLOBAL')
+        }
+        //label(node)
+        customWorkspace(config.workspace)
+        //childCustomWorkspace('.')
+        steps {
+          shell(cleanerStep(project))
+        }
+    }
+
+}
+
+
 for(project in config.projects) {
     jobName = config.handlerJobPrefix + project
     matrixJob(jobName) {
@@ -356,7 +413,7 @@ for(project in config.projects) {
         parameters {
       	  stringParam(config.datasetStoreId, '', 'This is essentially the signature of the dataset store calling this handler\'s listener.')
         }
-        blockOn(config.builderJob){
+        blockOn([config.builderJob, '^' + config.cleanerJobPrefix + project]){
           blockLevel('GLOBAL')
         }
         //label(node)

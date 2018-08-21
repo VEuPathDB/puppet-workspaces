@@ -145,6 +145,15 @@ class workspaces::jenkins (
     mode    => '0600'
   }
 
+  # this creates the views
+  file { "${init_groovy}/65_create_view.groovy":
+    ensure  => 'file',
+    content => template('workspaces/create_view.groovy.erb'),
+    notify  => Service['jenkins@WS'],
+    owner   => 'jenkins',
+    mode    => '0600'
+  }
+
   file { '/usr/local/home/jenkins/irodsWorkspacesJobs.groovy':
     ensure  => 'file',
     content => template('workspaces/irodsWorkspacesJobs.groovy.erb'),
