@@ -346,6 +346,33 @@ job('irods-listener') {
   }
 }
 
+def cleanallStep = {
+  return """
+    jenkins.model.Jenkins.instance.items.each {
+    if (it.name ==~ /^/ + "${config.cleanerJobPrefix}" + /.*/) {
+        println "Starting " + it.name
+		def build = Thread.currentThread().executable
+		def key = "DRY_RUN"
+		def resolver = build.buildVariableResolver
+		def value = resolver.resolve(key)
+		def param = new hudson.model.StringParameterValue(key, value)
+	    def paramAction = new hudson.model.ParametersAction(param)
+       hudson.model.Hudson.instance.queue.schedule(it, 0, paramAction)
+      }
+    }
+  """.stripIndent()
+}
+
+job(config.cleanerJob) {
+description("run all ${config.cleanerJobPrefix} jobs")
+        parameters {
+          booleanParam('DRY_RUN', true, 'If true, just print what we would do, don\'t do anything ')
+        }
+  steps {
+    systemGroovyCommand(cleanallStep())
+  }
+}
+
 def cleanerStep = { project ->
   return """
 

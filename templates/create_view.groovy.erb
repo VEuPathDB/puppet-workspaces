@@ -34,5 +34,8 @@ for(project in config.projects) {
 // add listener to handler view
 handlerView.doAddJobToView(config.listenerJob)
 
+// add cleanall to cleaner view
+cleanerView.doAddJobToView(config.cleanerJob)
+
 // save current Jenkins state to disk
 jenkins.save()
