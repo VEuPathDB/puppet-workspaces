@@ -383,14 +383,15 @@ export PATH="\$GUS_HOME/bin:\$PROJECT_HOME/install/bin:\$PATH"
 export PROJECT_ID="${project}"
 export PROJECT=\$PROJECT_ID
 export PROJECT_LIST="\$PROJECT_HOME/EuPathDBIrods/projectconf/${config.confset}"
-export PROJECT_DB="\$(grep \$PROJECT \$PROJECT_LIST | cut -f 2)"
-
 
 export GUS_CONFIG=\$GUS_HOME/config/\$PROJECT/gus.config
 
+export PROJECT_DB=\$(awk -F@ '/^jdbc/{print \$2}' \$GUS_CONFIG)
+export DB_USER=\$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)
+
   if [[ "\$DRY_RUN" == "true" ]]
   then
-    echo "I would take info out of \$GUS_CONFIG and run \$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncate* against \$PROJECT_DB"
+    echo "I would take info out of \$GUS_CONFIG and run \$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncate* against \$PROJECT_DB as user \$DB_USER"
     ls -al \$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncate*
   else
     # we pull out the password this way so that we don't expose it to process listing.  
@@ -398,9 +399,9 @@ export GUS_CONFIG=\$GUS_HOME/config/\$PROJECT/gus.config
     # we run truncate core tables first, then dataset type tables
 
     awk -F= '/databasePassword/{print \$2}' \$GUS_CONFIG \
-    | sqlplus  \$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetTypeTables.sql
+    | sqlplus  \$DB_USER@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetTypeTables.sql
     awk -F= '/databasePassword/{print \$2}' \$GUS_CONFIG \
-    | sqlplus  \$(awk -F= '/databaseLogin/{print \$2}' \$GUS_CONFIG)@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetCoreTables.sql
+    | sqlplus  \$DB_USER@\$PROJECT_DB @\$PROJECT_HOME/ApiCommonData/Load/lib/sql/apidbschema/truncateUserDatasetCoreTables.sql
   fi
 
   """.stripIndent()
