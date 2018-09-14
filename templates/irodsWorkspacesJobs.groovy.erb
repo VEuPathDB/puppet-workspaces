@@ -270,6 +270,9 @@ matrixJob('irods-builder') {
       location("https://cbilsvn.pmacs.upenn.edu/svn/apidb/ApiCommonWebsite/${config.branch}") {
         directory('project_home/ApiCommonWebsite')
       }
+      location("https://cbilsvn.pmacs.upenn.edu/svn/gus/WDKClient/${config.branch}") {
+        directory('project_home/EuPathDBIrods')
+      }
       location("https://cbilsvn.pmacs.upenn.edu/svn/apidb/EbrcWebSvcCommon/${config.branch}") {
         directory('project_home/EbrcWebSvcCommon')
       }
@@ -461,7 +464,14 @@ for(project in config.projects) {
               runForMatrixParent true
               behavior 0
               script {
-                script 'if (manager.build.result.isWorseThan(hudson.model.Result.SUCCESS)) { manager.build.project.disabled = true }'
+                script """if (manager.build.result.isWorseThan(hudson.model.Result.SUCCESS)) { 
+manager.build.project.disabled = true }
+
+if(manager.logContains(".*completed with result SUCCESS.*")) {
+   manager.build.project.disabled = false
+}
+
+"""
                 sandbox false
               }
             }
