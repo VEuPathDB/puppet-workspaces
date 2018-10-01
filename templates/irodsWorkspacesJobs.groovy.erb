@@ -285,6 +285,12 @@ matrixJob('irods-builder') {
       location("https://cbilsvn.pmacs.upenn.edu/svn/apidb/EuPathDBIrods/${config.branch}") {
         directory('project_home/EuPathDBIrods')
       }
+      location("https://cbilsvn.pmacs.upenn.edu/svn/apidb/WDKWebsite/${config.branch}") {
+        directory('project_home/WDKWebsite')
+      }
+      location("https://cbilsvn.pmacs.upenn.edu/svn/apidb/WDKClient/${config.branch}") {
+        directory('project_home/WDKClient')
+      }
     }
   }
   if (config.svn_build_poll) {
