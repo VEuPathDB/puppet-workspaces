@@ -462,6 +462,9 @@ for(project in config.projects) {
         }
 	publishers {
 
+        // keep jobs for 30 days, or 9000 jobs
+        logRotator(30, 9000, -1, -1)
+
 // Note: would be nice to use the dsl below, but there is no runForMatrixParent
 // option in dsl currently, so we just do it manually with a configure block.
 //          groovyPostBuild('if (manager.build.result.isWorseThan(hudson.model.Result.SUCCESS)) { manager.build.project.disabled = true }', Behavior.DoNothing)
