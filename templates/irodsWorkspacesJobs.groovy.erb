@@ -165,7 +165,7 @@ if [[ "\$PROJECT_DB" == "auto" ]]
       PROJECT_DOMAIN="\$PROJECT.org"
     fi
     
-    DB_URL="http://\$WEBSITE_PREFIX.\$PROJECT_DOMAIN/dashboard/xml/wdk/databases/appdb/dbuniquename/value"
+    DB_URL="https://\$WEBSITE_PREFIX.\$PROJECT_DOMAIN/dashboard/xml/wdk/databases/appdb/dbuniquename/value"
     echo "I'd hit \$DB_URL"
     CURL_OUT=\$(curl -f \$DB_URL)
     
@@ -476,9 +476,13 @@ for(project in config.projects) {
                 script """if (manager.build.result.isWorseThan(hudson.model.Result.SUCCESS)) { 
 manager.build.project.disabled = true }
 
-if(manager.logContains(".*completed with result SUCCESS.*")) {
-   manager.build.project.disabled = false
-}
+// The below is only useful if we have temporarily disabled one campus.
+// Otherwise, a failure of one side will be masked. TODO: fix this to be a
+// better method
+//
+//if(manager.logContains(".*completed with result SUCCESS.*")) {
+//   manager.build.project.disabled = false
+//}
 
 """
                 sandbox false
