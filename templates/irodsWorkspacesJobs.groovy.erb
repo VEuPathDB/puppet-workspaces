@@ -106,9 +106,6 @@ case "\$ENV" in
         ;;
 esac
 
-mkdir -p "\$GUS_HOME/lib/java/db_driver";
-cp "\$ORACLE_HOME/jdbc/lib/ojdbc6.jar" "\$GUS_HOME/lib/java/db_driver/"
-
 #create empty site-vars.yml - all conifer config should be in env config
 mkdir -p \$GUS_HOME/config
 touch \$SITE_VARS
