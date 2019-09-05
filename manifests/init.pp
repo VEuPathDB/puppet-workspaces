@@ -73,10 +73,15 @@ class workspaces (
   # create links to individual files in svn checkout
   $msi_bin = '/var/lib/irods/msiExecCmd_bin'
   $link_defaults = { ensure => 'link', require => Class[irods::provider] }
+
   $links = {
-    "$msi_bin/eventGenerator.py"                         => { target => "$checkout_location/Scripts/remoteExec/eventGenerator.py" },
-    "$msi_bin/executeJobFile.py"                         => { target => "$checkout_location/Scripts/remoteExec/executeJobFile.py" },
-    "/etc/irods/ud.re"                                   => { target => "$checkout_location/Scripts/ud.re" },
+    "$msi_bin/eventGenerator.py" => { target => "$checkout_location/Scripts/remoteExec/eventGenerator.py" },
+    "$msi_bin/executeJobFile.py" => { target => "$checkout_location/Scripts/remoteExec/executeJobFile.py" },
+    "/etc/irods/ud.re"           => { target => "$checkout_location/Scripts/ud.re" },
+    "/etc/irods/core.py"         => { target => "$checkout_location/Scripts/core.py" },
+    "/etc/irods/ebrc_irods.py"   => { target => "$checkout_location/Scripts/ebrc_irods.py" },
+    "/etc/irods/config.py"       => { target => "$checkout_location/Scripts/config.py" },
+    "/etc/irods/debug.py"        => { target => "$checkout_location/Scripts/debug.py" },
   }
 
   create_resources(file, $links, $link_defaults)
