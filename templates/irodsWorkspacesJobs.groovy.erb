@@ -477,9 +477,9 @@ manager.build.project.disabled = true }
 // Otherwise, a failure of one side will be masked. TODO: fix this to be a
 // better method
 //
-//if(manager.logContains(".*completed with result SUCCESS.*")) {
-//   manager.build.project.disabled = false
-//}
+if(manager.logContains(".*completed with result SUCCESS.*")) {
+   manager.build.project.disabled = false
+}
 
 """
                 sandbox false
