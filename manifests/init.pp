@@ -67,7 +67,7 @@ class workspaces (
   vcsrepo { $checkout_location:
     ensure   => present,
     provider => svn,
-    source   => "https://github.com/VEuPathDB/EuPathDBIrods/${branch}@HEAD"),
+    source   => "https://github.com/VEuPathDB/EuPathDBIrods/${branch}@HEAD",
   }
 
   # create links to individual files in svn checkout
