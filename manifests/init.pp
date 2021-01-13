@@ -53,7 +53,7 @@ class workspaces (
 
   # TODO put in packages.pp?
   # these packages are needed for irods helper scripts
-  package { 'python-jenkins':
+  package { 'python2-jenkins':
     ensure => installed,
   }
 
