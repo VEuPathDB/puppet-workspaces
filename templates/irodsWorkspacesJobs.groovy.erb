@@ -44,7 +44,7 @@ def handlerStep = { project ->
     rm \$GUS_HOME/lib/java/db_driver/ojdbc5.jar || true
 
 
-    fgpJava org.apidb.irods.BuildEventsFile
+    fgpJava org.apidb.irods.ProcessIrodsEvents
   """.stripIndent()
 }
 
@@ -54,11 +54,18 @@ def listenerStep = {
       if (it.name ==~ /^irods-handler-.*/) {
         println "Starting " + it.name
 		def build = Thread.currentThread().executable
-		def key = "${config.datasetStoreId}"
 		def resolver = build.buildVariableResolver
-		def value = resolver.resolve(key)
-		def param = new hudson.model.StringParameterValue(key, value)
-	    def paramAction = new hudson.model.ParametersAction(param)
+
+		def ds_id = "DATASET_STORE_ID"
+		def ds_value = resolver.resolve(ds_id)
+		def ds_param = new hudson.model.StringParameterValue(ds_id, ds_value)
+
+		def rm = "RUN_MODE"
+		def rm_value = resolver.resolve(rm)
+		def rm_param = new hudson.model.StringParameterValue(rm, rm_value)
+
+		def paramAction = new hudson.model.ParametersAction([ds_param, rm_param])
+
         hudson.model.Hudson.instance.queue.schedule(it, 0, paramAction)
       }
     }
@@ -326,6 +333,7 @@ job('irods-listener') {
   description('Trigger all irods-handler-.* jobs')
   parameters {
 	stringParam(config.datasetStoreId, '', 'This is essentially the signature of the dataset store calling this listener.')
+        stringParam('RUN_MODE', 'sync', 'Run mode can be one of "sync" or "cleanup" defaults to "sync"')
   }
   steps {
     systemGroovyCommand(listenerStep())
@@ -442,7 +450,8 @@ for(project in config.projects) {
         }
         description(handlerJobDesc(project))
         parameters {
-      	  stringParam(config.datasetStoreId, '', 'This is essentially the signature of the dataset store calling this handler\'s listener.')
+         stringParam(config.datasetStoreId, '', 'This is essentially the signature of the dataset store calling this handler\'s listener.')
+         stringParam('RUN_MODE', 'sync', 'Run mode can be one of "sync" or "cleanup" defaults to "sync"')
         }
         blockOn([config.builderJob, '^' + config.cleanerJobPrefix + project]){
           blockLevel('GLOBAL')
