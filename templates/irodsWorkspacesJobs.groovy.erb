@@ -184,7 +184,7 @@ fi
 
 
 # set appdb connection via extra vars to conifer
-  export EXTRA_CONIFER_ARGS=" --extra-vars modelconfig_appDb_connectionUrl=jdbc:oracle:oci:@\$PROJECT_DB"
+  export EXTRA_CONIFER_ARGS=" --extra-vars modelconfig_appDb_connectionUrl=jdbc:oracle:oci:@\$PROJECT_DB --extra-vars modelconfig_adminEmail=${config.modelconfig_adminEmail}"
 
   echo project is: \$PROJECT
   \$BASE_GUS/project_home/FgpUtil/Util/bin/conifer configure \\

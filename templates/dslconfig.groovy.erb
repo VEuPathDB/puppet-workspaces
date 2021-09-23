@@ -43,6 +43,8 @@ adminusers = [
 <% end -%>
 ]
 
+modelconfig_adminEmail = 'ud_notify@apidb.org'
+
 plugins = [
 <%= @plugins.map{ |plugin| "'#{plugin}'"}.join(",\n  ") %>
 ]
