@@ -187,7 +187,7 @@ fi
   export EXTRA_CONIFER_ARGS=" --extra-vars modelconfig_appDb_connectionUrl=jdbc:oracle:oci:@\$PROJECT_DB --extra-vars modelconfig_adminEmail=${config.modelconfig_adminEmail}"
 
   echo project is: \$PROJECT
-  \$BASE_GUS/project_home/FgpUtil/Util/bin/conifer configure \\
+  \$BASE_GUS/project_home/conifer/bin/conifer configure \\
   --project \$PROJECT \\
   --env \$ENV \\
   --site-vars \$SITE_VARS \\
