@@ -118,7 +118,7 @@ mkdir -p \$GUS_HOME/config
 touch \$SITE_VARS
 
 # do initial conifer install
-\$BASE_GUS/project_home/FgpUtil/Util/bin/conifer install EuPathDBIrods
+\$BASE_GUS/project_home/conifer/bin/conifer install EuPathDBIrods
 
 # configure each project listed in PROJECT_LSIT
 PROJECTS="\$(grep -v ^project \$PROJECT_LIST | cut -f 1)"
@@ -291,6 +291,9 @@ matrixJob('irods-builder') {
       }
       location("https://github.com/VEuPathDB/WDKClient/${config.branch}@HEAD") {
         directory('project_home/WDKClient')
+      }
+      location("https://github.com/VEuPathDB/Conifer/${config.branch}@HEAD") {
+        directory('project_home/conifer')
       }
     }
   }
