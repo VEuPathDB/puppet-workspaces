@@ -303,6 +303,9 @@ matrixJob('irods-builder') {
     }
   }
   wrappers {
+    credentialsBinding {
+      usernamePassword('GITHUB_USER', 'GITHUB_TOKEN', 'config.buildCredentialId')
+    }
     preScmSteps {
       steps {
         shell(builderPreScmStep())

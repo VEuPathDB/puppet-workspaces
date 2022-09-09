@@ -56,6 +56,9 @@
 # * `plugins`
 # a list of jenkins plugins to install
 #
+# * `buildCredentialId`
+# jenkins credential ID needed for building
+#
 # * `use_ldap`
 # boolean that configures if ldap is used for login or not.  If true,
 # the rest of the ldap_* parameters need to be specified.
@@ -94,6 +97,7 @@ class workspaces::jenkins (
   $notification_email  = $::workspaces::jenkins::params::notification_email,
   $notification_sender_email  = $::workspaces::jenkins::params::notification_sender_email,
   $plugins             = $::workspaces::jenkins::params::plugins,
+  $buildCredentialId   = $::workspaces::jenkins::params::buildCredentialId,
 
   $use_ldap             = $::workspaces::jenkins::params::use_ldap,
   $ldap_server          = $::workspaces::jenkins::params::ldap_server,
